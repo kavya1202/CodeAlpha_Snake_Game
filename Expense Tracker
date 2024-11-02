@@ -1,0 +1,35 @@
+class Expense:
+    def __init__(self, amount, date, category, description=""):
+        self.amount = amount
+        self.date = date
+        self.category = category
+        self.description = description
+
+import csv
+from expense import Expense
+
+class ExpenseTracker:
+    def __init__(self):
+        self.expenses = []
+    
+    def add_expense(self, amount, date, category, description=""):
+        expense = Expense(amount, date, category, description)
+        self.expenses.append(expense)
+    
+    def view_expenses(self):
+        for expense in self.expenses:
+            print(f"{expense.date} | {expense.category} | ${expense.amount} | {expense.description}")
+
+    def save_to_csv(self, filename="data/expenses.csv"):
+        with open(filename, mode="w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(["Amount", "Date", "Category", "Description"])
+            for expense in self.expenses:
+                writer.writerow([expense.amount, expense.date, expense.category, expense.description])
+
+    def load_from_csv(self, filename="data/expenses.csv"):
+        with open(filename, mode="r") as file:
+            reader = csv.reader(file)
+            next(reader)
+            for row in reader:
+                self.add_expense(float(row[0]), row[1], row[2], row[3])
